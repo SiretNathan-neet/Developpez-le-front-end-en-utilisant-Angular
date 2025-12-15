@@ -49,9 +49,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
       filter(([params, olympics]) => !!params['id'] && !!olympics),
       map(([params, olympics]) => {
         const countryId = params['id'];
-        const countriesArray = olympics as any[];
+        const countriesArray = olympics;
 
-        const country = countriesArray.find(
+        const country = countriesArray?.find(
           (olympic: OlympicCountry) => olympic.country === countryId
         );
 

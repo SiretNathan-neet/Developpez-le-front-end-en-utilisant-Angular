@@ -4,6 +4,7 @@ import { AfterViewInit, Component, ElementRef,
 import { Router } from '@angular/router';
 import { PieChartModule, Color, ScaleType, ChartCommonModule } from '@swimlane/ngx-charts'; //Ajout de NgxCharts pour les charts
 import { Subject, takeUntil } from 'rxjs';
+import type { Olympic } from 'src/app/core/models/Olympic'; //J'importe que le type d'Olympic
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 //interface pour les données qu'on garde pour le graphique
@@ -13,17 +14,7 @@ export interface PieData {
 }
 
 //Typage d'un pays individuel
-type OlympicCountry = {
-  id: number;
-  country: string;
-  participations: Array<{
-    id: number;
-    year: number;
-    city: string;
-    medalsCount: number;
-    athleteCount: number;
-  }>;
-};
+type OlympicCountry = Olympic [0]
 
 @Component({
   selector: 'app-pie-chart',
@@ -87,7 +78,7 @@ export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.olympicService.getOlympics().pipe(takeUntil(this.destroy$))
     .subscribe(olympics => {
       if(olympics) {
-        this.dataPie = this.transformToPieData(olympics as any[]);
+        this.dataPie = this.transformToPieData(olympics);
         this.cdr.markForCheck();
       }
     });

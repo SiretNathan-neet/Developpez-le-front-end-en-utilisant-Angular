@@ -84,9 +84,9 @@ export class LineChartComponent implements OnInit, OnDestroy {
       filter(([params, olympics]) => !!params['id'] && !!olympics),
       map(([params, olympics]) => {
         const countryID = params['id'];
-        const countries = olympics as any[];
+        const countries = olympics;
 
-        const country = countries.find(
+        const country = countries?.find(
           (c: OlympicCountry) => c.country === countryID
         );
         return { countryID, country};
