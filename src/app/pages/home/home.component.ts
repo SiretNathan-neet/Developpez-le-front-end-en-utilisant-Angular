@@ -5,17 +5,8 @@ import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';
 
-type OlympicCountry = {
-  id: number;
-  country: string;
-  participations: Array<{
-    id: number;
-    year: number;
-    city: string;
-    medalsCount: number;
-    athleteCount: number;
-  }>;
-};
+//dit qu'olympicCountry est 1 élément du tableau Olympic
+type OlympicCountry = Olympic [0]
 
 @Component({
   selector: 'app-home',
@@ -42,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.olympicService.getOlympics()
     .pipe(takeUntil(this.destroy$)).subscribe(olympics => {
       if(olympics) {
-        this.calculateStatistics(olympics as any[])
+        this.calculateStatistics(olympics)
       }
     });
   }
