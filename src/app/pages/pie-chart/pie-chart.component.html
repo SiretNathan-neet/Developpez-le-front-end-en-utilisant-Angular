@@ -1,3 +1,24 @@
+<!-- 
+  ===================================================================
+  COMPOSANT PIE-CHART - TEMPLATE DU GRAPHIQUE
+  ===================================================================
+  
+  Description : 
+  Template pour le pie chart de la page d'accueil.
+  Affiche la répartition des médailles olympiques par pays.
+  Utilise la bibliothèque ngx-charts pour le rendu graphique.
+  
+  Fonctionnalités :
+  - Affichage conditionnel : graphique ou message de chargement.
+  - Graphique interactif permettant la sélection d'un pays.
+  - Navigation vers la page de détails au clic sur une part du graphique.
+  
+  Gestion des états :
+  - Données disponibles → affiche le graphique
+  - Données en chargement → affiche un message temporaire
+  ===================================================================
+-->
+
 <div *ngIf="dataPie && dataPie.length > 0; else loading">
   <ngx-charts-pie-chart
     [results]="dataPie"

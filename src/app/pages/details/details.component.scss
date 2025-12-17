@@ -1,3 +1,33 @@
+/* 
+  ===================================================================
+  STYLES DU COMPOSANT DETAILS - PAGE DE DÉTAILS PAYS
+  ===================================================================
+  
+  Description :
+  Feuille de style pour la page de détails d'un pays.
+  Reprend l'identité visuelle de la page d'accueil pour une cohérence globale.
+  Gère la mise en page responsive avec optimisations pour tablettes et mobiles.
+  
+  Organisation :
+  1. Styles de base (desktop)
+  2. Adaptation tablette (max-width: 900px)
+  3. Adaptation smartphone (max-width: 600px)
+  
+  Charte graphique :
+  - Couleur principale : rgb(0, 165, 184)
+  - Fond : #ffffff - Blanc
+  - Ombres : rgba(0,0,0,0.08-0.1)
+  ===================================================================
+*/
+
+
+/* 
+===============================================
+STYLES DE BASE (Desktop)
+=============================================== 
+*/
+
+/* Utilisation de flexbox pour un alignement vertical centré du contenu */
 :host {
   display: flex;
   flex-direction: column;
@@ -32,7 +62,7 @@ h1.stat-item {
   border-radius: 12px;
   padding: 20px 25px;
   min-width: 120px;
-  flex: 1;
+  flex: 1; /* Partage équitable de l'espace */
   max-width: 200px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   border: 3px solid rgb(0, 165, 184);
@@ -78,9 +108,13 @@ button.btn {
   margin-bottom: 20px;
 }
 
-//Breakpoint responsive : 
+/* 
+===============================================
+RESPONSIVE - TABLETTE (max-width: 900px)
+===============================================
+Ajustements pour les écrans de taille moyenne
+*/
 
-//Pour tablette : 
 @media (max-width: 900px) {
   h1.stat-item{
     font-size: 2rem;
@@ -100,7 +134,13 @@ button.btn {
   }
 }
 
-//Pour téléphone : 
+/* 
+===============================================
+RESPONSIVE - SMARTPHONE (max-width: 600px)
+===============================================
+Optimisation pour les écrans mobiles
+*/
+
 @media (max-width: 600px) {
   :host {
     padding: 20px 10px;
@@ -135,6 +175,9 @@ button.btn {
     max-width: none;
   }
 
+  /* 
+  On fixe la hauteur du graphique pour éviter le scroll excessif sur mobile
+  */
   ngx-charts-line-chart{
     height: 350px !important; 
   }

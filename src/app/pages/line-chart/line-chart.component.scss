@@ -1,3 +1,28 @@
+/* 
+  ===================================================================
+  STYLES DU COMPOSANT LINE-CHART
+  ===================================================================
+  
+  Description :
+  Feuille de style pour le composant line-chart de l'application.
+  Gère le centrage et le dimensionnement du graphique ngx-charts.
+  
+  Objectifs :
+  - Centrer le graphique dans son conteneur
+  - Assurer un affichage optimisé sur toutes les tailles d'écran
+  - Corriger les comportements par défaut de ngx-charts
+  
+  Similarité avec pie-chart :
+  Ce fichier SCSS est identique à pie-chart.component.scss dans sa structure
+  car les deux graphiques nécessitent la même stratégie de centrage.
+  
+  Note technique :
+  L'utilisation de !important est nécessaire pour surcharger
+  les styles inline appliqués par la bibliothèque ngx-charts
+  
+  ===================================================================
+*/
+
 :host {
   display: flex;
   justify-content: center;

@@ -1,3 +1,23 @@
+/* 
+  ===================================================================
+  STYLES DU COMPOSANT PIE-CHART
+  ===================================================================
+  
+  Description :
+  Feuille de style pour le composant pie-chart de l'application.
+  Gère le centrage et le dimensionnement du graphique ngx-charts.
+  
+  Objectifs :
+  - Centrer parfaitement le graphique dans son conteneur
+  - Assurer un affichage optimal sur toutes les tailles d'écran
+  - Corriger les comportements par défaut de ngx-charts
+  
+  Note technique :
+  L'utilisation de !important est nécessaire pour surcharger
+  les styles appliqués par la bibliothèque ngx-charts
+  ===================================================================
+*/
+
 :host {
   display: flex;
   justify-content: center;
@@ -15,3 +35,10 @@ svg {
   display: block;
 }
 
+/*
+Note sur !important :
+  Normalement déconseillé mais nécessaire ici car :
+  - ngx-charts applique des styles inline (priorité maximale)
+  - Impossible de surcharger autrement
+  - Usage limité et justifié pour corriger un comportement de bibliothèque
+*/
