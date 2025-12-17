@@ -1,3 +1,33 @@
+/* 
+  ===================================================================
+  STYLES DU COMPOSANT DE LA PAGE D'ACCUEIL
+  ===================================================================
+  
+  Description :
+  Gestion des styles pour la page d'accueil.
+  Gère la mise en page responsive.
+  
+  Organisation pour la responsivité :
+  1. Styles de base (desktop)
+  2. Adaptation tablette (max-width: 768px)
+  3. Adaptation smartphone (max-width: 600px)
+  
+  Charte graphique :
+  - Couleur principale : rgb(0, 165, 184)
+  - Fond : #ffffff - Blanc
+  - Ombres : rgba(0,0,0,0.08-0.1)
+  ===================================================================
+*/
+
+/* ===============================================
+   STYLES DE BASE (Desktop)
+   =============================================== */
+
+
+/* 
+Conteneur principal du composant 
+qui utilise Flexbox pour centrer le contenu verticalement 
+*/
 :host {
   display: flex;
   flex-direction: column;
@@ -17,9 +47,13 @@ h1.stat-item {
   width: fit-content;
   max-width: 100%;            
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  word-wrap: break-word; //permet d'éviter que ca déborde de l'écran mobile
+  word-wrap: break-word; /* permet d'éviter que le texte déborde de l'écran mobile */
 }
 
+/* 
+Permet d'afficher les deux statistiques côte à côte
+Egalise la taille des encadrés
+*/
 .stats-row {
   display: flex;
   justify-content: center;
@@ -32,7 +66,7 @@ h1.stat-item {
   border-radius: 12px;
   padding: 20px 25px;
   min-width: 120px;
-  flex: 1;
+  flex: 1; /* Permet de partager l'espace équitablement */
   max-width: 200px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   border: 3px solid rgb(0, 165, 184);
@@ -41,12 +75,14 @@ h1.stat-item {
   font-weight: 500;
 }
 
+/* Texte en gras pour les statistiques */
 .stat-item strong {
   display: block;
   margin-bottom: 5px;
   font-size: 1.1rem;
   font-weight: 600;
 }
+
 
 .stat-item .label {
   font-size: 1.1rem;
@@ -55,11 +91,13 @@ h1.stat-item {
   margin-bottom: 5px;
 }
 
+/* Mise en évidence de la valeur avec une police plus grand et en gras */
 .stat-item .value {
   font-size: 1.6rem;
   font-weight: 700;
 }
 
+/* Conteneur du graphique */
 .chart-wrapper {
   width: 100%;
   max-width: 900px;         
@@ -73,7 +111,13 @@ h1.stat-item {
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-//Dimension tablette
+/* 
+===============================================
+RESPONSIVE - TABLETTE (max-width: 768px)
+===============================================
+
+Ajustements pour les écrans de taille moyenne
+*/
 
 @media (max-width: 768px) {
 
@@ -101,11 +145,18 @@ h1.stat-item {
 
   .chart-wrapper {
     padding: 15px 20px;
-    max-width: 100%;
+    max-width: 100%; /* Permet d'utiliser toute la largeur disponible */ 
   }
 }
 
-//Dimension Smartphone
+/* 
+===============================================
+RESPONSIVE - SMARTPHONE (max-width: 600px)
+===============================================
+
+Optimisation pour les écrans mobiles
+*/
+
 @media (max-width: 600px) {
   :host {
     padding: 20px 10px;
@@ -116,6 +167,7 @@ h1.stat-item {
     padding: 8px 15px;
   }
 
+  /* Ici on empile les données statistiques verticalement pour une meilleure lisibilité */
   .stats-row {
     flex-direction: column;
     align-items: center;
@@ -137,9 +189,10 @@ h1.stat-item {
     padding: 10px;
     margin-top: 20px;
     width: 100%;
-    max-width: none;
+    max-width: none; /* On retire la limite de largeur */
   }
 
+  /* On limite la hauteur du graphique pour éviter un scroll excessif */
   ngx-charts-pie-chart{
     height: 350px;
   }

@@ -1,3 +1,29 @@
+/* 
+  ===================================================================
+  COMPOSANT PIE-CHART - LOGIQUE MÉTIER DU GRAPHIQUE
+  ===================================================================
+  
+  Description :
+  Composant Angular gérant le pie chart interactif.
+  de la page d'accueil de l'application.
+  
+  Fonctionnalités principales :
+  - Récupération et transformation des données olympiques pour le graphique
+  - Configuration visuelle du pie chart (couleurs, dimensions, options)
+  - Gestion du redimensionnement responsive en temps réel
+  - Navigation vers la page de détails au clic sur une part
+  
+  Technologies utilisées :
+  - @swimlane/ngx-charts pour le rendu graphique SVG
+  - RxJS pour la gestion asynchrone des données
+  - Angular HostListener pour la détection du resize
+  
+  Architecture :
+  - Composant standalone (Angular moderne)
+  - Implémente OnInit, AfterViewInit, OnDestroy pour le cycle de vie complet
+  ===================================================================
+*/
+
 import { AfterViewInit, Component, ElementRef, 
   HostListener, NgZone, 
   OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
@@ -7,13 +33,17 @@ import { Subject, takeUntil } from 'rxjs';
 import type { Olympic } from 'src/app/core/models/Olympic'; //J'importe que le type d'Olympic
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
-//interface pour les données qu'on garde pour le graphique
+/* 
+Interface définissant la structure des données pour le graphique
+Format requis par ngx-charts-pie-chart
+l'objectif est de représenter 1 élement du pie chart par un objet typescript
+*/
 export interface PieData {
   name: string;
   value: number;
 }
 
-//Typage d'un pays individuel
+/* Typage personnalisé représentant un pays individuel */
 type OlympicCountry = Olympic [0]
 
 @Component({
@@ -26,11 +56,11 @@ type OlympicCountry = Olympic [0]
 
 export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
   
-  //On initialise les doonées du graphique taille + data
+  /* Données du graphique au format PieData */
   dataPie: PieData[] = [];
-  view: [number, number] = [300, 300];
+  view: [number, number] = [300, 300]; /* Dimension initiale du graphique */
 
-  //On configure les options qu'on souhaite utiliser pour le graphique
+  /* Options de configuration du graphique */
   gradient: boolean = false;
   showLegend: boolean = false;
   showLabels: boolean = true;
@@ -43,10 +73,10 @@ export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
     group: ScaleType.Ordinal
   };
 
-  //Subject qui va gérer la destruction des observables
+  /* Subject RxJS pour la gestion et la destruction des observables */
   private destroy$ = new Subject<void>();
 
-  //On initialise sous forme de constante les données de configuration de la taille du graphique
+  /* On initialise sous forme de constante les données de configuration de la taille du graphique */
   private readonly Max_Chart_Size = 600;
   private readonly Chart_Size_Ratio = 0.85;
 
@@ -56,24 +86,36 @@ export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
               private zone: NgZone,
               private cdr: ChangeDetectorRef) {}
 
-  //Ajout de pipe(takeUntil(destroy$)) pour limiter l'écoute de l'observable jusqu'à sa destruction 
+  /* Initialisation du composant et chargement des données depuis le service */
   ngOnInit(): void {
     this.loadOlympicData();
   }
 
+  /* 
+  Appelé après qu'Angular ait initialisé le DOM du composant
+  Calcule la taille initiale du graphique selon le conteneur (responsivité)
+  */
   ngAfterViewInit(): void {
-    //délai pour attendre que le DOM soit complétement rendu
     setTimeout(() => {
       this.resizeChart();
     }, 0);
   }
 
+  /* 
+  .next : déclenche le désabonnement utilisant takeUntil
+  .complete : Libère les ressources et indique qu'aucune nouvelle valeur ne sera émise
+  */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  //Méthode qui va charger les données de olympiques pour le graphique
+  /* 
+  Méthode de chargement des données olympiques
+  vérifie que les olympics existent avant transformation
+  markForCheck() : indique à Angular de vérifier le composant
+  lors du prochain cycle de détection de changements
+  */
   private loadOlympicData(): void {
     this.olympicService.getOlympics().pipe(takeUntil(this.destroy$))
     .subscribe(olympics => {
@@ -84,7 +126,21 @@ export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  //On transforme ici les données reçu en format PieData
+  /* 
+  Méthode de transformation des données
+  Objectif : 
+  1. Garder le nom du pays
+  2. Calculer le total de médailles
+  3. Retourner un objet { name, value }
+
+  .map(): transforme chaque élément du tableau
+  .reduce(): additionne les médailles de toutes les participations
+
+  Les paramètres : 
+  1. total : accumulateur (somme en cours)
+  2. participation : élément courant
+  3. 0 : valeur initiale de l'accumulateur
+  */
   private transformToPieData(coutnries: OlympicCountry[]): PieData[] {
     return coutnries.map(country => ({
       name: country.country,
@@ -93,12 +149,36 @@ export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
   }
 
-  //Appel de la méthode resizeChart pour que le graphique s'adapte automatiquement à l'appareil de l'utilisateur
+  /* 
+  @HostListener écoute l'évement resize du navigateur
+
+  Fonctionnement :
+  1. L'utilisateur redimensionne la fenêtre du navigateur
+  2. Détection de l'évenement 'window:resize'
+  3. Appel de la méthode onResize()
+  4. Redimensionnement du graphique
+  */
   @HostListener('window:resize')
   onResize(): void {
     this.resizeChart();
   }
 
+
+  /*
+  Méthode de mise à jour de la taille du graphique
+  1. Récupère la largeur du conteneur parent
+  2. Applique le ratio 
+  3. Limite à la taille maximale
+  4. Met à jour la propriété view
+  5. Force la détection du changement éventuel 
+
+  this.el.nativeElement.parentElement?.offsetWidth :
+  1. el.nativeElement : référence au DOM de <app-pie-chart>
+  2. .parentElement : élément parent
+  3. ?.offsetWidth : largeur en pixels
+  4. || 300 : valeur par défaut si parent non disponible
+
+  */
   private resizeChart(): void {
     const containerWidth = this.el.nativeElement.parentElement?.offsetWidth || 300;
     const size = Math.min(containerWidth * this.Chart_Size_Ratio, this.Max_Chart_Size);
@@ -106,7 +186,10 @@ export class PieChartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }  
 
-  // Me permet de gérer ce qu'il se passe quand je clique (naviguer sur la page du pays correspondant au clic)
+  /*
+  Méthode appelée lors du clic sur une part du pie chart
+  Permet de naviguer sur la page '/Details/NomDuPaysCliqué' associé
+  */
   onSelect(dataPie: PieData): void {
     this.router.navigate(['/Details',dataPie.name]);
   }
